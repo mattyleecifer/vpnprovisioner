@@ -6,7 +6,8 @@ This script creates a basic DigitalOcean droplet, runs a script to install OpenV
 
 You will have to have an ssh key set up with DigitalOcean before you use this, or you can edit the script so it takes a username and password.
 
-Warning:
+
+### Warning:
 
 I only tested this in an empty DigitalOcean account - line 24 only looks for the first droplet that the API returns so you might need to edit that if you have existing droplets running, I don't know. 
 

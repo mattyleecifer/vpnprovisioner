@@ -11,3 +11,6 @@ You will have to have an ssh key set up with DigitalOcean before you use this, o
 
 I only tested this in an empty DigitalOcean account - line 24 only looks for the first droplet that the API returns so you might need to edit that if you have existing droplets running, I don't know. 
 
+
+### Todo:
+- Maybe make it so it just generates a random password for droplet rather than using SSH keys

@@ -2,15 +2,11 @@
 
 I don't really use VPNs that much and I don't want to pay some company $5 a month in case I need one. I needed a way to quickly provision a VPN so I could use it whenever I needed it and only pay for the exact time I'm using it. 
 
-This script creates a basic DigitalOcean droplet, runs a script to install OpenVPN, and then downloads the OVPN file into your home directory. You can then import the file into OpenVPN and connect. After you're done, press enter and the script will close and destroy the droplet.
+This script creates a basic DigitalOcean droplet, runs a script to install OpenVPN, and then downloads the OVPN file into your home directory. You can then import the file into OpenVPN and connect. After you're done, press enter and the script will close and destroy the droplet. 
 
-You will have to have an ssh key set up with DigitalOcean before you use this, or you can edit the script so it takes a username and password.
+You will have to have an ssh key set up with DigitalOcean before you use this. Unfortunately, due to security limitations, the API can't be used generate a droplet with a pre-set password so y'all gonna have to be secure and use SSH keys. Just search 'digitalocean ssh key setup' on Google to get instructions. 
 
 
 ### Warning:
 
 I only tested this in an empty DigitalOcean account - line 24 only looks for the first droplet that the API returns so you might need to edit that if you have existing droplets running, I don't know. 
-
-
-### Todo:
-- Maybe make it so it just generates a random password for droplet rather than using SSH keys

@@ -1,6 +1,10 @@
 import os
 import time
-import digitalocean
+import digitalocean, random
+# import pyperclip
+
+regions = ['nyc1','nyc3','ams3','sfo3','sgp1','lon1','fra1','tor1','blr1']
+server = random.choice(regions)
 
 # DigitalOcean Key
 dokey = "insertkey"
@@ -10,7 +14,7 @@ manager = digitalocean.Manager(token=dokey)
 keys = manager.get_all_sshkeys()
 droplet = digitalocean.Droplet(token=dokey,
                                name='VPN',
-                               region='sfo3', # New York 2
+                               region=server, # New York 2
                                image='ubuntu-20-04-x64', # Ubuntu 20.04 x64
                                size_slug='s-1vcpu-1gb',  # 1GB RAM, 1 vCPU
                                ssh_keys=keys,
@@ -25,14 +29,23 @@ while True:
     if type(ip) == str:
         break
     time.sleep(5)
+    print("Waiting for droplet to respond...")
 print("Droplet Created!")
+
+# pyperclip.copy("ssh root@" + ip)
 
 # Set up VPN
 import paramiko
 ssh = paramiko.SSHClient()
 ssh.load_system_host_keys()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-ssh.connect(ip, 22, "root")
+while True:
+    try:
+        ssh.connect(ip, 22, "root")
+        break
+    except:
+        print("Waiting for SSH...")
+        time.sleep(5)
 ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("curl -O https://raw.githubusercontent.com/angristan/openvpn-install/master/openvpn-install.sh\nchmod +x openvpn-install.sh\nexport AUTO_INSTALL=y\n./openvpn-install.sh\n")
 print("Setting up VPN...")
 

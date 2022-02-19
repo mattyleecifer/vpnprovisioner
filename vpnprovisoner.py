@@ -1,7 +1,7 @@
 import os
 import time
 import digitalocean, random
-# import pyperclip
+import pyperclip
 
 regions = ['nyc1','nyc3','ams3','sfo3','sgp1','lon1','fra1','tor1','blr1']
 server = random.choice(regions)
@@ -30,48 +30,69 @@ while True:
         break
     time.sleep(5)
     print("Waiting for droplet to respond...")
-print("Droplet Created!")
+print("Droplet Created in " + server + "!")
+print(ip)
 
-# pyperclip.copy("ssh root@" + ip)
 
-# Set up VPN
-import paramiko
-ssh = paramiko.SSHClient()
-ssh.load_system_host_keys()
-ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-while True:
-    try:
-        ssh.connect(ip, 22, "root")
-        break
-    except:
-        print("Waiting for SSH...")
-        time.sleep(5)
-ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("curl -O https://raw.githubusercontent.com/angristan/openvpn-install/master/openvpn-install.sh\nchmod +x openvpn-install.sh\nexport AUTO_INSTALL=y\n./openvpn-install.sh\n")
-print("Setting up VPN...")
+print("ssh root@" + ip)
+print("Copied to clipboard!")
+pyperclip.copy("ssh root@" + ip)
+input('Press enter...')
 
-# Download OVPN
-os.chdir(os.path.expanduser("~"))
-from scp import SCPClient
-while True:
-    try:
-        with SCPClient(ssh.get_transport()) as scp:
-            scp.get('~/client.ovpn')
-        break
-    except:
-        print("OVPN not ready...")
-        time.sleep(5)
-ssh.close()
-print("OVPN file downloaded!")
+print("curl -O https://raw.githubusercontent.com/angristan/openvpn-install/master/openvpn-install.sh\nchmod +x openvpn-install.sh\nexport AUTO_INSTALL=y\n./openvpn-install.sh\n")
+pyperclip.copy(("curl -O https://raw.githubusercontent.com/angristan/openvpn-install/master/openvpn-install.sh\nchmod +x openvpn-install.sh\nexport AUTO_INSTALL=y\n./openvpn-install.sh\n"))
+input('Press enter...')
 
-# Fix OVPN file with IP address
-import re
-textfile = open("client.ovpn", 'r')
-filetext = textfile.read()
-textfile.close()
-clean = re.sub("remote (.+?) 1194", "remote " + ip + " 1194", filetext, flags=re.S)
-with open("client.ovpn", "w") as text_file:
-    text_file.write(clean)
-print("OVPN file cleaned!")
+
+print("scp root@" + ip + ":client.ovpn client.ovpn")
+pyperclip.copy("scp root@" + ip + ":client.ovpn client.ovpn")
+input('Press enter...')
+
+
+# # Set up VPN
+# import paramiko
+# ssh = paramiko.SSHClient()
+# ssh.load_system_host_keys()
+# ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+# while True:
+#     try:
+#         ssh.connect(ip, 22, "root")
+#         break
+#     except:
+#         print("Waiting for SSH...")
+#         time.sleep(5)
+# ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("curl -O https://raw.githubusercontent.com/angristan/openvpn-install/master/openvpn-install.sh\nchmod +x openvpn-install.sh\nexport AUTO_INSTALL=y\n./openvpn-install.sh\n")
+# print("Setting up VPN...")
+#
+# # Download OVPN
+# os.chdir(os.path.expanduser("~"))
+# from scp import SCPClient
+# while True:
+#     try:
+#         with SCPClient(ssh.get_transport()) as scp:
+#             scp.get('~/client.ovpn')
+#         break
+#     except:
+#         print("OVPN not ready...")
+#         time.sleep(5)
+#
+# print("OVPN almost ready...")
+# time.sleep(10)
+# with SCPClient(ssh.get_transport()) as scp:
+#     scp.get('~/client.ovpn')
+#
+# ssh.close()
+# print("OVPN file downloaded!")
+#
+# # Fix OVPN file with IP address
+# import re
+# textfile = open("client.ovpn", 'r')
+# filetext = textfile.read()
+# textfile.close()
+# clean = re.sub("remote (.+?) 1194", "remote " + ip + " 1194", filetext, flags=re.S)
+# with open("client.ovpn", "w") as text_file:
+#     text_file.write(clean)
+# print("OVPN file cleaned!")
 
 input("Press Enter to destroy...")
 
